@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>HTML Forms</title>
+    </head>
+    <body>
+        <h1>HTML Forms</h1>
+        <form action="index.html">
+            Textbox: 
+            <input type="text" name="txtText" value="" size="5" /><br/>
+            Password: 
+            <input type="password" name="txtPassword" value="" /><br/>
+            Hidden: 
+            <input type="hidden" name="txtHidden" value="" /><br/>
+            Male: 
+            <input type="checkbox" name="chkCheck" value="ON" checked="checked" /><br/>
+
+            <strong>Status:</strong><br/>
+            <input type="radio" name="rdoStatus" value="Single" checked="checked" /> Single<br/>
+            <input type="radio" name="rdoStatus" value="Married" /> Married<br/>
+            <input type="radio" name="rdoStatus" value="Divorced" /> Divorced<br/>
+
+            <strong>ComboBox:</strong><br/>
+            <select name="txtCombo">
+                <option value="Servlet">JSP and Servlet</option>
+                <option value="EJB">EJB</option>
+            </select><br/>
+
+            <strong>Multiple:</strong><br/>
+            <select name="txtList" multiple="multiple" size="3">
+                <option value="Servlet" selected="selected">JSP and Servlet</option>
+                <option value="EJB" selected="selected">EJB</option>
+                <option value="Java">Core Java</option>
+            </select><br/>
+
+            <strong>TextArea:</strong><br/>
+            <textarea name="txtArea" rows="4" cols="20">
+                This is a form parameters demo!!!!
+            </textarea><br/>
+
+            <input type="submit" name="txtB" value="Submit" />
+            <input type="submit" name="action" value="Register" />
+            <input type="reset" name="txtB" value="Reset" />
+            <input type="button" name="txtB" value="JavaScript" onclick="" />
+        </form>
+    </body>
+</html>
