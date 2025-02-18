@@ -1,7 +1,7 @@
 <%-- 
     Document   : footer
     Created on : Feb 17, 2025, 11:13:08 AM
-    Author     : LAM
+    Author     : fuci
 --%>
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
@@ -40,7 +40,7 @@
             </div>
             <p>&copy; 2025 Game Store. All rights reserved.</p>
             <nav class="footer-menu">
-                <a href="#">About Us</a>
+                <a href="aboutUs.jsp">About Us</a>
                 <a href="#">Privacy Policy</a>
                 <a href="#">Terms of Use</a>
                 <a href="#">Support</a>
