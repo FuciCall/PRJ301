@@ -19,6 +19,7 @@
     .pixel-text {
         font-family: 'Press Start 2P', cursive;
         text-transform: uppercase;
+        color: #ffffff; /* đảm bảo chữ luôn màu trắng */
     }
 
     .pixel-border {

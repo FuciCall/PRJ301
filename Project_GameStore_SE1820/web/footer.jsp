@@ -43,7 +43,7 @@
                 <a href="aboutUs.jsp">About Us</a>
                 <a href="#">Privacy Policy</a>
                 <a href="#">Terms of Use</a>
-                <a href="#">Support</a>
+                <a href="support.jsp">Support</a>
             </nav>
         </div>
     </footer>

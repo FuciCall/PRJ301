@@ -1,0 +1,50 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f4f4f4;
+    text-align: center;
+}
+
+.container {
+    padding: 30px;
+}
+
+.game-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 30px;
+    margin-top: 60px;
+}
+
+#mainImage {
+    width: 500px; /* Tăng kích thước */
+    height: 350px;
+    border-radius: 15px;
+}
+
+.arrow-button {
+    font-size: 40px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: #ffffff; /* Màu trắng sáng */
+    text-shadow: 2px 2px 5px rgba(255, 255, 255, 0.7); /* Hiệu ứng đổ bóng */
+}
+
+.arrow-button:hover {
+    color: #ffcc00; /* Màu vàng sáng khi hover */
+}
+
+
+.thumbnail {
+    width: 80px; /* Tăng kích thước ảnh nhỏ */
+    height: 60px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.thumbnail:hover {
+    transform: scale(1.2);
+}

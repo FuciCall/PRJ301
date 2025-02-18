@@ -42,7 +42,7 @@ public class MainController extends HttpServlet {
                     String strPassword = request.getParameter("txtPassword");
 
                     if (isValidLogin(strUserID, strPassword)) {
-                        url = "home.jsp";
+                        url = "store.jsp";
                         UserDTO user = getUser(strUserID);
                         session.setAttribute("user", user);
                         session.setAttribute("isLoggedIn", true);
