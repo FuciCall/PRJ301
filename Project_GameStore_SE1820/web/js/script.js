@@ -6,18 +6,6 @@ const gameImages = [
         price: "990.000₫"
     },
     {
-        main: "images/cyberpunk_main.jpg",
-        thumbnails: ["images/cyberpunk_1.jpg", "images/cyberpunk_2.jpg", "images/cyberpunk_3.jpg", "images/cyberpunk_4.jpg"],
-        title: "Cyberpunk 2077",
-        price: "750.000₫"
-    },
-    {
-        main: "images/reddead_main.jpg",
-        thumbnails: ["images/reddead_1.jpg", "images/reddead_2.jpg", "images/reddead_3.jpg", "images/reddead_4.jpg"],
-        title: "Red Dead Redemption 2",
-        price: "1.200.000₫"
-    },
-    {
         main: "images/pubg_main.jpg",
         thumbnails: ["images/pubg_1.jpg", "images/pubg_2.jpg", "images/pubg_3.jpg", "images/pubg_4.jpg"],
         title: "PUBG",
@@ -28,6 +16,18 @@ const gameImages = [
         thumbnails: ["images/lol_1.jpg", "images/lol_2.jpg", "images/lol_3.jpg", "images/lol_4.jpg"],
         title: "League of Legends",
         price: "Free to Play"
+    },
+    {
+        main: "images/cyberpunk_main.jpg",
+        thumbnails: ["images/cyberpunk_1.jpg", "images/cyberpunk_2.jpg", "images/cyberpunk_3.jpg", "images/cyberpunk_4.jpg"],
+        title: "Cyberpunk 2077",
+        price: "750.000₫"
+    },
+    {
+        main: "images/reddead_main.jpg",
+        thumbnails: ["images/reddead_1.jpg", "images/reddead_2.jpg", "images/reddead_3.jpg", "images/reddead_4.jpg"],
+        title: "Red Dead Redemption 2",
+        price: "1.200.000₫"
     }
 ];
 

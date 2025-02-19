@@ -172,4 +172,23 @@
         });
     </script>
 
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const storeLink = document.querySelector(".menu a[href='#']");
+
+            storeLink.addEventListener("click", function (event) {
+                event.preventDefault();
+                const isLoggedIn = <%= session.getAttribute("USER") != null%>;
+
+                if (!isLoggedIn) {
+                   alert("You need to log in to access the Store.");
+                    window.location.href = "login.jsp";
+                } else {
+                    window.location.href = "store.jsp";
+                }
+            });
+        });
+    </script>
+
+
 </body>
