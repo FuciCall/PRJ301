@@ -1,8 +1,11 @@
 package controller;
 
+import dao.BookDAO;
 import dao.UserDAO;
+import dto.BookDTO;
 import dto.UserDTO;
 import java.io.IOException;
+import java.util.List;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -47,12 +50,19 @@ public class MainController extends HttpServlet {
                         session.setAttribute("user", user);
                         session.setAttribute("isLoggedIn", true);
                     } else {
-                        url = "invalid.jsp";
+                        request.getSession().setAttribute("mess", "Incorrect User or Password!");
+                        url = "login.jsp";
                     }
 
                 } else if (action.equals("logout")) {
-                    session.invalidate();
+                    session.invalidate();  // huy bo session
                     url = "login.jsp";
+                }else  if (action.equals("search")) {
+                    BookDAO bdao = new BookDAO();
+                    String searchTerm = request.getParameter("searchTerm");
+                    List<BookDTO> books = bdao.searchByTitle(searchTerm);
+                    request.setAttribute("books", books);
+                    url = "search.jsp";
                 }
             }
         } catch (Exception e) {

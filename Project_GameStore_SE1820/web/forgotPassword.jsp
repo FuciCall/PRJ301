@@ -3,7 +3,7 @@
 <html>
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    <title>Sign Up - Game Store</title>
+    <title>Forgot Password - Game Store</title>
     <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
     <style>
         body {
@@ -17,7 +17,7 @@
             margin: 0;
         }
 
-        .signup-container {
+        .forgot-password-container {
             background: rgba(0, 0, 0, 0.8);
             padding: 20px;
             border-radius: 8px;
@@ -66,46 +66,31 @@
             box-shadow: 3px 3px 0px #fff;
         }
 
-        .signup-container a {
+        .forgot-password-container a {
             font-size: 12px;
             text-decoration: none;
             text-align: center;
             color: #ffcc00;
         }
 
-        .signup-container span {
+        .forgot-password-container span {
             font-size: 12px;
             margin-top: 10px;
         }
     </style>
 </head>
 <body>
-    <div class="signup-container">
-        <h2>Sign Up</h2>
-        <form action="registerServlet" method="post">
+    <div class="forgot-password-container">
+        <h2>Forgot Password</h2>
+        <form action="forgotPasswordServlet" method="post">
             <div class="form-group">
-                <label for="username">Username</label>
-                <input type="text" id="username" name="username" required placeholder="Enter username">
+                <label for="email">Enter your email</label>
+                <input type="email" id="email" name="email" required placeholder="Enter your email">
             </div>
 
-            <div class="form-group">
-                <label for="email">Email</label>
-                <input type="email" id="email" name="email" required placeholder="Enter email">
-            </div>
+            <button type="submit" class="submit-btn">Reset Password</button>
 
-            <div class="form-group">
-                <label for="password">Password</label>
-                <input type="password" id="password" name="password" required placeholder="Enter password">
-            </div>
-
-            <div class="form-group">
-                <label for="confirmPassword">Confirm Password</label>
-                <input type="password" id="confirmPassword" name="confirmPassword" required placeholder="Confirm password">
-            </div>
-
-            <button type="submit" class="submit-btn">Sign Up</button>
-
-            <span>Already have an account? <a href="form.jsp">Log In</a></span>
+            <span>Remember your password? <a href="login.jsp">Log In</a></span>
         </form>
     </div>
 </body>

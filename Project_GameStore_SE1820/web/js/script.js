@@ -18,9 +18,9 @@ const gameImages = [
         price: "Free to Play"
     },
     {
-        main: "images/cyberpunk_main.jpg",
-        thumbnails: ["images/cyberpunk_1.jpg", "images/cyberpunk_2.jpg", "images/cyberpunk_3.jpg", "images/cyberpunk_4.jpg"],
-        title: "Cyberpunk 2077",
+        main: "images/solo_main.jpg",
+        thumbnails: ["images/solo_1.jpg", "images/solo_2.jpg", "images/solo_3.jpg", "images/solo_4.jpg"],
+        title: "Solo Leveling:ARISE",
         price: "750.000₫"
     },
     {

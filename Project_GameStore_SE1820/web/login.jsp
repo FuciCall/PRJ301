@@ -1,103 +1,100 @@
+<%-- 
+    Document   : form
+    Created on : Feb 19, 2025, 3:57:53 PM
+    Author     : LAM
+--%>
+
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>Đăng nhập - Game Store</title>
+        <title>Login Form - Game Store</title>
         <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
-        <link rel="stylesheet" type="text/css" href="styles.css">
         <style>
-            .login-container {
-                min-height: calc(100vh - 100px);
+            body{
+                background: url('images/pixel-art-fantasy-art-mini-shrine-wallpaper.jpg');
+                background-size: 100%;
+                font-family: 'Press Start 2P', cursive;
                 display: flex;
                 justify-content: center;
                 align-items: center;
-                background-color: #184151; /* Thay đổi màu nền */
+                height: 100vh;
+                margin: 0;
+            }
+            .login-container{
+                background: rgba(0, 0, 0, 0.8);
                 padding: 20px;
-                flex-direction: column;
-            }
-
-
-            .login-form {
-                background: white;
-                padding: 30px;
                 border-radius: 8px;
-                box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-                width: 100%;
+                box-shadow: 4px 4px 0px #ffffff;
+                text-align: left;
                 max-width: 400px;
+                width: 100%;
+                color: white;
             }
-
-            .form-group {
+            .form-group{
                 margin-bottom: 20px;
             }
-
-            .form-group label {
+            .form-group label{
                 display: block;
-                margin-bottom: 8px;
-                font-weight: 500;
-                color: #333;
+                margin-bottom: 10px;   
             }
-
-            .form-group input {
-                width: 100%;
+            .form-group input{
+                width: 90%;
                 padding: 10px;
-                border: 1px solid #ddd;
-                border-radius: 4px;
+                border: 2px solid #fff;
+                border-radius: 5px;
                 font-size: 16px;
-                transition: border-color 0.3s;
-            }
-
-            .form-group input:focus {
-                border-color: #4CAF50;
-                outline: none;
-            }
-
-            .submit-btn {
-                background-color: #4CAF50;
+                text-align: center;
+                background: black;
                 color: white;
-                padding: 12px 20px;
-                border: none;
-                border-radius: 4px;
+            }
+            .submit-btn{
+                background-color: #ffcc00;
+                color: black;
+                padding: 10px;
+                border: 2px solid white;
+                border-radius: 5px;
                 cursor: pointer;
-                width: 100%;
                 font-size: 16px;
-                transition: background-color 0.3s;
-            }
-
-            .submit-btn:hover {
-                background-color: #45a049;
-            }
-
-            .form-title {
-                text-align: center;
-                margin-bottom: 30px;
-                color: #333;
-            }
-
-            .footer {
-                margin-top: auto;
                 width: 100%;
+                transition: all 0.3s ease;
+                margin-bottom: 20px;
+            }
+            .submit-btn:hover{
+                background-color: #ffaa00;
+                box-shadow: 3px 3px 0px #fff;
+            }
+            .login-container a{
+                font-size: 12px;
+                text-decoration: none;
                 text-align: center;
-                padding: 20px;
-                background: #20232a;
-                color: white;
+            }
+            .login-container span{
+                font-size: 12px;
+                margin-top: 10px;
             }
         </style>
     </head>
     <body>
-        <%@include file="header.jsp" %>
         <div class="login-container">
-            <form action="MainController" method="post" class="pixel-border">
-                <input type="hidden" name="action" value="login" />
-                <label>UserID</label>
-                <input type="text" name="txtUserID" class="pixel-input"/><br/> 
-                <label>Password</label>
-                <input type="password" name="txtPassword" class="pixel-input"/><br/>
-                <input type="submit" value="Login" class="pixel-button"/>
+            <h2>Login</h2>
+            <form action="MainController" method="post">
+                <input type="hidden" name="action" value="login"/>
+                <div class="form-group">
+                    <label>UserID</label>
+                    <input type="text" name="txtUserID" required placeholder="Enter userID">
+                </div>
+                <div class="form-group">
+                    <label>Password</label>
+                    <input type="password" name="txtPassword" required placeholder="Enter password">
+                </div>
+                <input type="submit" value="Login" class="submit-btn"/>
+                <a href="forgotPassword.jsp">Forgot password</a><br/>
+                
+                <span>Don't have an account? <a href='register.jsp'>Register</a></span>
             </form>
-        </div>
-        <div class="footer">
-            <%@include file="footer.jsp" %>
-        </div>
+
     </body>
 </html>
+
