@@ -105,7 +105,7 @@
 
             <button type="submit" class="submit-btn">Sign Up</button>
 
-            <span>Already have an account? <a href="form.jsp">Log In</a></span>
+            <span>Already have an account? <a href="login.jsp">Log In</a></span>
         </form>
     </div>
 </body>

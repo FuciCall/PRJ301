@@ -1,3 +1,4 @@
+
 /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
@@ -72,7 +73,7 @@ public class UserDAO implements IDAO<UserDTO, String> {
 
     @Override
     public UserDTO readById(String id) {
-        String sql = "SELECT * FROM tblUsers WHERE userID= ?";
+        String sql = "SELECT * FROM tblUsers WHERE userID = ?";
         try {
             Connection conn = DBUtils.getConnection();
             PreparedStatement ps = conn.prepareStatement(sql);
