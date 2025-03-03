@@ -22,7 +22,7 @@
                 String error = request.getAttribute("error") + "";
             %>
             <%=error.equals("null") ? "" : error%>
-
+            
             <%
                 String mess = request.getAttribute("mess") + "";
             %>

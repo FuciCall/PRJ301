@@ -17,7 +17,7 @@ import utils.DBUtils;
  *
  * @author as
  */
-public class StartupProjectsDAO implements IDAO<StartupProjectsDTO, String>{
+public class StartupProjectsDAO implements IDAO<StartupProjectsDTO, String> {
 
     @Override
     public boolean create(StartupProjectsDTO entity) {
@@ -48,28 +48,98 @@ public class StartupProjectsDAO implements IDAO<StartupProjectsDTO, String>{
     public List<StartupProjectsDTO> search(String searchTerm) {
         return null;
     }
-    
-     public List<StartupProjectsDTO> searchByName(String searchTerm) {
-        String sql = "SELECT * FROM tblStartupProjects WHERE project_name like ?";
-        List<StartupProjectsDTO> list = new ArrayList<>();
-         try {
-             Connection conn = DBUtils.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql);
-             ps.setString(1, "%" + searchTerm + "%");
-             ResultSet rs = ps.executeQuery();
-             while (rs.next()) {                 
-                 StartupProjectsDTO sp = new StartupProjectsDTO(
-                         rs.getInt("project_id"),
-                         rs.getString("project_name"), 
-                         rs.getString("Description"), 
-                         rs.getString("Status"), 
-                         rs.getInt("estimated_launch")); 
-                list.add(sp);
-             }
-         } catch (Exception e) {
-             System.out.println(e.toString());
-         }
-        return list;
-         }
 
+    public List<StartupProjectsDTO> searchByName(String searchTerm) {
+        // 1. Kiểm tra xem danh sách có dữ liệu không
+        String sql = "SELECT * FROM tblStartupProjects WHERE project_name LIKE ?";
+        List<StartupProjectsDTO> list = new ArrayList<>();
+
+        // 2. Kiem tra ket noi database
+        try (Connection conn = DBUtils.getConnection();
+                PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            if (conn == null) {
+                System.out.println("Khong the ket noi Database!");
+                return list;
+            }
+            System.out.println("Ket noi database oke!");
+
+            // 3. thiet lap tham so truy van
+            ps.setString(1, "%" + searchTerm + "%");
+
+            // 4. thuc thi truy van
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    list.add(new StartupProjectsDTO(
+                            rs.getInt("project_id"),
+                            rs.getString("project_name"),
+                            rs.getString("Description"),
+                            rs.getString("Status"),
+                            rs.getDate("estimated_launch")));
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        // 5. Kiem tra so luong ket qua
+        //System.out.println("So luong ket qua tim thay: " + list.size());
+        return list;
     }
+
+    public List<StartupProjectsDTO> searchByName2(String searchTerm) {
+        // 1. Kiem tra xem danh sach co du lieu khong
+        String sql = "SELECT * FROM tblStartupProjects WHERE project_name LIKE ? and YEAR(estimated_launch) = 2025";
+        List<StartupProjectsDTO> list = new ArrayList<>();
+
+        // 2. Kiem tra ket noi database
+        try (Connection conn = DBUtils.getConnection();
+                PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            if (conn == null) {
+                System.out.println("Khong the ket noi Database!");
+                return list;
+            }
+            System.out.println("Ket noi database oke!");
+
+            // 3. thiet lap tham so truy van
+            ps.setString(1, "%" + searchTerm + "%");
+
+            // 4. thuc thi truy van
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    list.add(new StartupProjectsDTO(
+                            rs.getInt("project_id"),
+                            rs.getString("project_name"),
+                            rs.getString("Description"),
+                            rs.getString("Status"),
+                            rs.getDate("estimated_launch")));
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        // 5. Kiem tra so luong ket qua
+        //System.out.println("So luong ket qua tim thay: " + list.size());
+        return list;
+    }
+
+    public boolean updateYearEqual2024(String id) {
+        String sql = "UPDATE tblStartupProjects SET estimated_launch = '2024-01-01' where project_id = ?  ";
+        try {
+            Connection conn = DBUtils.getConnection();
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setString(1, id);
+            int i = ps.executeUpdate();
+            return i > 0;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
+        
+    }
+
+
+
+}

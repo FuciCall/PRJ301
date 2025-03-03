@@ -7,7 +7,7 @@ public class StartupProjectsDTO {
     private String project_name;
     private String description;
     private String status;
-    private Date estimated_launch; // Thay int -> Date
+    private Date estimated_launch; 
 
     public StartupProjectsDTO() {
     }
@@ -52,11 +52,11 @@ public class StartupProjectsDTO {
         this.status = status;
     }
 
-    public Date getEstimated_launch() {  // Đổi kiểu dữ liệu
+    public Date getEstimated_launch() {  
         return estimated_launch;
     }
 
-    public void setEstimated_launch(Date estimated_launch) {  // Đổi kiểu dữ liệu
+    public void setEstimated_launch(Date estimated_launch) {
         this.estimated_launch = estimated_launch;
     }
 

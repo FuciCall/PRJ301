@@ -6,7 +6,6 @@
 package controller;
 
 import model.StartupProjectsDTO;
-import dao.StartupProjectsDAO;
 import dao.UserDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -66,36 +65,21 @@ public class MainController extends HttpServlet {
                     } else {
                         request.setAttribute("error", "Incorrect UserName or Password");
                         url = "login.jsp";
-                    }
-                } else if (action.equals("logout")) {
-                    request.getSession().invalidate(); //huy session
-                    request.setAttribute("mess", "You have sucessfully logged out!");
+                    }  
+                }else if (action.equals("logout")) {
                     url = "login.jsp";
-                } else if (action.equals("search")) {
-                    url = "search.jsp";
-                    StartupProjectsDAO spDAO = new StartupProjectsDAO();
-                    String searchTerm = request.getParameter("searchTerm");
-                    List<StartupProjectsDTO> sp = spDAO.searchByName2(searchTerm);
-                    request.setAttribute("sp", sp);
-            //check error        System.out.println(sp);
-                    request.setAttribute("searchTerm", searchTerm);
+                    request.getSession().invalidate();
+                    request.setAttribute("mess", "You have successfully logged out!");
+                }else if (action.equals("search")) {
                     
-                }else if (action.equals("delete")) {
-                    StartupProjectsDAO spDAO = new StartupProjectsDAO();
-                    String id = request.getParameter("id");
-                    spDAO.updateYearEqual2024(id);
-                    //search
+                    
                     url = "search.jsp";
                     
-                    String searchTerm = request.getParameter("searchTerm");
-                    List<StartupProjectsDTO> sp = spDAO.searchByName2(searchTerm);
-                    request.setAttribute("sp", sp);
-            //check error        System.out.println(sp);
-                    request.setAttribute("searchTerm", searchTerm);
+                    
                     
                 }
+                
             }
-
         } catch (Exception e) {
             log("Error at MainController: " + e.toString());
         } finally {
