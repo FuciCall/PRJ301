@@ -5,12 +5,15 @@
  */
 package controller;
 
-import dao.BookDAO;
+import dao.StartupProjectsDAO;
 import dao.UserDAO;
-import dto.BookDTO;
+import dto.StartupProjectsDTO;
 import dto.UserDTO;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.text.SimpleDateFormat;
+import java.time.Year;
+import java.util.Date;
 import java.util.List;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -28,14 +31,13 @@ import utils.AuthUtils;
 @WebServlet(name = "MainController", urlPatterns = {"/MainController"})
 public class MainController extends HttpServlet {
 
-    private BookDAO bookDAO = new BookDAO();
+    private StartupProjectsDAO spDAO = new StartupProjectsDAO();
 
     private static final String LOGIN_PAGE = "login.jsp";
 
     private String processLogin(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         String url = LOGIN_PAGE;
-        //
         String strUserID = request.getParameter("txtUserID");
         String strPassword = request.getParameter("txtPassword");
         if (AuthUtils.isValidLogin(strUserID, strPassword)) {
@@ -46,23 +48,20 @@ public class MainController extends HttpServlet {
             // search
             processSearch(request, response);
         } else {
-            request.setAttribute("message", "Incorrect UserID or Password");
+            request.setAttribute("error", "Incorrect UserID or Password");
             url = "login.jsp";
         }
-        //
         return url;
     }
 
     private String processLogout(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         String url = LOGIN_PAGE;
-        //
         HttpSession session = request.getSession();
         if (AuthUtils.isLoggedIn(session)) {
             request.getSession().invalidate(); // Hủy bỏ session
             url = "login.jsp";
         }
-        //
         return url;
     }
 
@@ -76,8 +75,8 @@ public class MainController extends HttpServlet {
             if (searchTerm == null) {
                 searchTerm = "";
             }
-            List<BookDTO> books = bookDAO.searchByTitle2(searchTerm);
-            request.setAttribute("books", books);
+            List<StartupProjectsDTO> sp = spDAO.searchByName2(searchTerm);
+            request.setAttribute("sp", sp);
             request.setAttribute("searchTerm", searchTerm);
         }
         return url;
@@ -87,9 +86,9 @@ public class MainController extends HttpServlet {
             throws ServletException, IOException {
         String url = LOGIN_PAGE;
         HttpSession session = request.getSession();
-        if (AuthUtils.isAdmin(session)) {
+        if (AuthUtils.isFounders(session)) {
             String id = request.getParameter("id");
-            bookDAO.updateQuantityToZero(id);
+            spDAO.updateYearLessThan2025(id);
             // search
             processSearch(request, response);
             url = "search.jsp";
@@ -101,35 +100,41 @@ public class MainController extends HttpServlet {
             throws ServletException, IOException {
         String url = LOGIN_PAGE;
         HttpSession session = request.getSession();
-        if (AuthUtils.isAdmin(session)) {
+        if (AuthUtils.isFounders(session)) {
             try {
                 boolean checkError = false;
-                String bookID = request.getParameter("txtBookID");
-                String title = request.getParameter("txtTitle");
-                String author = request.getParameter("txtAuthor");
-                int publishYear = Integer.parseInt(request.getParameter("txtPublishYear"));
-                double price = Double.parseDouble(request.getParameter("txtPrice"));
-                int quantity = Integer.parseInt(request.getParameter("txtQuantity"));
+                int project_id = Integer.parseInt(request.getParameter("txtProject_id"));
+                String project_name = request.getParameter("txtProject_name");
+                String description = request.getParameter("txtDescription");
+                String status = request.getParameter("txtStatus");
+                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+                Date estimated_launch = sdf.parse(request.getParameter("txtEstimatedLaunch"));
 
-                if (bookID == null || bookID.trim().isEmpty()) {
+                String pID = request.getParameter("txtProject_id");
+                project_id = 0;
+                if (pID != null && !pID.trim().isEmpty()) {
+                    project_id = Integer.parseInt(pID);
+                } else {
                     checkError = true;
-                    request.setAttribute("txtBookID_error", "Book ID cannot be empty.");
+                    request.setAttribute("txtProject_id_error", "Project ID cannot be empty.");
                 }
 
-                if (quantity < 0) {
+                SimpleDateFormat yyyy = new SimpleDateFormat("yyyy");
+                int year = Integer.parseInt(yyyy.format(estimated_launch));
+                if (year < 2025) {
                     checkError = true;
-                    request.setAttribute("txtQuantity_error", "Quantity >=0.");
+                    request.setAttribute("txtEstimated_launch_error", "Year of estimated launch must be at least 2025.");
                 }
 
-                BookDTO book = new BookDTO(bookID, title, author, publishYear, price, quantity);
+                StartupProjectsDTO sp = new StartupProjectsDTO(project_id, project_name, description, status, estimated_launch);
 
                 if (!checkError) {
-                    bookDAO.create(book);
+                    spDAO.create(sp);
                     // search
                     url = processSearch(request, response);
                 } else {
-                    url = "bookForm.jsp";
-                    request.setAttribute("book", book);
+                    url = "StartupProjectsForm.jsp";
+                    request.setAttribute("sp", sp);
                 }
             } catch (Exception e) {
             }

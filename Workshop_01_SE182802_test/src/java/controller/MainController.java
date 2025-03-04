@@ -24,10 +24,18 @@ import model.UserDTO;
  */
 @WebServlet(name = "MainController", urlPatterns = {"/MainController"})
 public class MainController extends HttpServlet {
-
     private StartupProjectsDAO spDAO = new StartupProjectsDAO();
     private static final String LOGIN_PAGE = "login.jsp";
 
+    /**
+     * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
+     * methods.
+     *
+     * @param request servlet request
+     * @param response servlet response
+     * @throws ServletException if a servlet-specific error occurs
+     * @throws IOException if an I/O error occurs
+     */
     public UserDTO getUser(String username) {
         UserDAO udao = new UserDAO();
         UserDTO user = udao.readById(username);
@@ -37,18 +45,6 @@ public class MainController extends HttpServlet {
     public boolean isValidLogin(String StrUserName, String StrPassword) {
         UserDTO user = getUser(StrUserName);
         return user != null && user.getPassword().equals(StrPassword);
-    }
-
-    public void search(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        String searchTerm = request.getParameter("searchTerm");
-        if (searchTerm==null) {
-            searchTerm = "";
-        }
-        List<StartupProjectsDTO> sp = spDAO.searchByName2(searchTerm);
-        request.setAttribute("sp", sp);
-        request.setAttribute("searchTerm", searchTerm);
-        //check error        System.out.println(sp);
     }
 
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
@@ -67,7 +63,6 @@ public class MainController extends HttpServlet {
                         url = "search.jsp";
                         UserDTO user = getUser(StrUserName);
                         request.getSession().setAttribute("user", user);
-                        search(request, response);
                     } else {
                         request.setAttribute("error", "Incorrect UserName or Password");
                         url = "login.jsp";
@@ -77,14 +72,25 @@ public class MainController extends HttpServlet {
                     request.setAttribute("mess", "You have sucessfully logged out!");
                     url = "login.jsp";
                 } else if (action.equals("search")) {
-                    search(request, response);
                     url = "search.jsp";
-                } else if (action.equals("delete")) {
+                    String searchTerm = request.getParameter("searchTerm");
+                    List<StartupProjectsDTO> sp = spDAO.searchByName(searchTerm);
+                    request.setAttribute("sp", sp);
+            //check error        System.out.println(sp);
+                    request.setAttribute("searchTerm", searchTerm);
+                    
+                }else if (action.equals("delete")) {   
                     String id = request.getParameter("id");
-                    spDAO.updateYearLessThan2025(id);
-                    search(request, response);
+                    spDAO.updateYearEqual2024(id);
+                    //search
                     url = "search.jsp";
-                    //check error        System.out.println(sp);
+                    
+                    String searchTerm = request.getParameter("searchTerm");
+                    List<StartupProjectsDTO> sp = spDAO.searchByName2(searchTerm);
+                    request.setAttribute("sp", sp);
+            //check error        System.out.println(sp);
+                    request.setAttribute("searchTerm", searchTerm);
+                    
                 }
             }
 

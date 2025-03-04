@@ -5,36 +5,35 @@
  */
 package dao;
 
-import dto.UserDTO;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import dto.UserDTO;
+import java.util.ArrayList;
 import utils.DBUtils;
 
 /**
  *
- * @author tungiF
+ * @author as
  */
 public class UserDAO implements IDAO<UserDTO, String> {
 
     @Override
     public boolean create(UserDTO entity) {
-        String sql = "INSERT [dbo].[tblUsers] ([userID], [fullName], [roleID], [password]) "
+        String sql = "INSERT [dbo].[tblUsers] [Username], [Name], [Password], [Role])  "
                 + "VALUES (?, ? ,? ,?)";
         Connection conn;
         try {
             conn = DBUtils.getConnection();
             PreparedStatement ps = conn.prepareStatement(sql);
-            ps.setString(1, entity.getUserID());
-            ps.setString(2, entity.getFullName());
-            ps.setString(3, entity.getRoleID());
-            ps.setString(4, entity.getPassword());
+            ps.setString(1, entity.getUsername());
+            ps.setString(2, entity.getName());
+            ps.setString(3, entity.getPassword());
+            ps.setString(4, entity.getRole());
             int n = ps.executeUpdate();
             return n > 0;
         } catch (ClassNotFoundException ex) {
@@ -56,10 +55,10 @@ public class UserDAO implements IDAO<UserDTO, String> {
             ResultSet rs = ps.executeQuery(sql);
             while (rs.next()) {
                 UserDTO user = new UserDTO(
-                        rs.getString("userID"),
-                        rs.getString("fullName"),
-                        rs.getString("roleID"),
-                        rs.getString("password"));
+                        rs.getString("Username"),
+                        rs.getString("Name"),
+                        rs.getString("Password"),
+                        rs.getString("Role"));
                 list.add(user);
             }
         } catch (ClassNotFoundException ex) {
@@ -72,7 +71,7 @@ public class UserDAO implements IDAO<UserDTO, String> {
 
     @Override
     public UserDTO readById(String id) {
-        String sql = "SELECT * FROM tblUsers WHERE userID= ?";
+        String sql = "SELECT * FROM tblUsers WHERE Username = ?";
         try {
             Connection conn = DBUtils.getConnection();
             PreparedStatement ps = conn.prepareStatement(sql);
@@ -80,10 +79,10 @@ public class UserDAO implements IDAO<UserDTO, String> {
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
                 UserDTO user = new UserDTO(
-                        rs.getString("userID"),
-                        rs.getString("fullName"),
-                        rs.getString("roleID"),
-                        rs.getString("password"));
+                        rs.getString("Username"),
+                        rs.getString("Name"),
+                        rs.getString("Password"),
+                        rs.getString("Role"));
                 return user;
             }
         } catch (ClassNotFoundException ex) {
@@ -97,18 +96,18 @@ public class UserDAO implements IDAO<UserDTO, String> {
     @Override
     public boolean update(UserDTO entity) {
         String sql = "UPDATE [tblUsers] SET "
-                + "[fullName] = ?, "
-                + "[roleID] = ?, "
-                + "[password] =? "
-                + "WHERE [userID] = ?";
+                + "[Name] = ?, "
+                + "[Role] = ?, "
+                + "[Password] =? "
+                + "WHERE [Username] = ?";
         Connection conn;
         try {
             conn = DBUtils.getConnection();
             PreparedStatement ps = conn.prepareStatement(sql);
-            ps.setString(1, entity.getFullName());
-            ps.setString(2, entity.getRoleID());
+            ps.setString(1, entity.getName());
+            ps.setString(2, entity.getRole());
             ps.setString(3, entity.getPassword());
-            ps.setString(4, entity.getUserID());
+            ps.setString(4, entity.getUsername());
             int n = ps.executeUpdate();
             return n > 0;
         } catch (ClassNotFoundException ex) {
@@ -121,7 +120,7 @@ public class UserDAO implements IDAO<UserDTO, String> {
 
     @Override
     public boolean delete(String id) {
-        String sql = "DELETE FROM [tblUsers] WHERE [userID] = ?";
+        String sql = "DELETE FROM [tblUsers] WHERE [Username] = ?";
         Connection conn;
         try {
             conn = DBUtils.getConnection();
@@ -140,10 +139,10 @@ public class UserDAO implements IDAO<UserDTO, String> {
     @Override
     public List<UserDTO> search(String searchTerm) {
         List<UserDTO> list = new ArrayList<>();
-        String sql = "SELECT [userID], [fullName], [roleID], [password] FROM [tblUsers] "
-                + "WHERE [userID] LIKE ? "
-                + "OR [fullName] LIKE ? "
-                + "OR [roleID] LIKE ?";
+        String sql = "SELECT [Username], [Name], [Password], [Role] FROM [tblUsers] "
+                + "WHERE [Username] LIKE ? "
+                + "OR [Name] LIKE ? "
+                + "OR [Role] LIKE ?";
 
         try (Connection conn = DBUtils.getConnection();
                 PreparedStatement pstmt = conn.prepareStatement(sql)) {
@@ -157,10 +156,10 @@ public class UserDAO implements IDAO<UserDTO, String> {
             try (ResultSet rs = pstmt.executeQuery()) {
                 while (rs.next()) {
                     UserDTO user = new UserDTO(
-                            rs.getString("userID"),
-                            rs.getString("fullName"),
-                            rs.getString("roleID"),
-                            rs.getString("password")
+                            rs.getString("Username"),
+                            rs.getString("Name"),
+                            rs.getString("Password"),
+                            rs.getString("Role")
                     );
                     list.add(user);
                 }

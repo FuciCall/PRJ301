@@ -6,7 +6,6 @@
 package dao;
 
 import java.sql.Connection;
-import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
@@ -22,22 +21,6 @@ public class StartupProjectsDAO implements IDAO<StartupProjectsDTO, String> {
 
     @Override
     public boolean create(StartupProjectsDTO entity) {
-        String sql = "INSERT INTO tblBooks "
-                + " (project_id, project_name,Description,Status,estimated_launch) "
-                + " VALUES (?, ?, ?, ?, ?) ";
-        try {
-            Connection conn = DBUtils.getConnection();
-            PreparedStatement ps = conn.prepareStatement(sql);
-            ps.setInt(1, entity.getProject_id());
-            ps.setString(2, entity.getProject_name());
-            ps.setString(3, entity.getDescription());
-            ps.setString(4, entity.getStatus());
-            ps.setDate(5, (Date) entity.getEstimated_launch());
-            int i = ps.executeUpdate();
-            return i > 0;
-        } catch (Exception e) {
-            System.out.println(e.toString());
-        }
         return false;
     }
 
@@ -69,7 +52,7 @@ public class StartupProjectsDAO implements IDAO<StartupProjectsDTO, String> {
     public List<StartupProjectsDTO> searchByName(String searchTerm) {
         // 1. Kiểm tra xem danh sách có dữ liệu không
         String sql = "SELECT * FROM tblStartupProjects WHERE project_name LIKE ?";
-        List<StartupProjectsDTO> list = new ArrayList<StartupProjectsDTO>();
+        List<StartupProjectsDTO> list = new ArrayList<>();
 
         // 2. Kiem tra ket noi database
         try (Connection conn = DBUtils.getConnection();
@@ -106,7 +89,7 @@ public class StartupProjectsDAO implements IDAO<StartupProjectsDTO, String> {
 
     public List<StartupProjectsDTO> searchByName2(String searchTerm) {
         // 1. Kiem tra xem danh sach co du lieu khong
-        String sql = "SELECT * FROM tblStartupProjects WHERE project_name LIKE ? AND (YEAR(estimated_launch) = 2025";
+        String sql = "SELECT * FROM tblStartupProjects WHERE project_name LIKE ? AND YEAR(estimated_launch) = 2025";
         List<StartupProjectsDTO> list = new ArrayList<>();
 
         // 2. Kiem tra ket noi database
@@ -142,8 +125,8 @@ public class StartupProjectsDAO implements IDAO<StartupProjectsDTO, String> {
         return list;
     }
 
-    public boolean updateYearLessThan2025(String id) {
-        String sql = "UPDATE tblStartupProjects SET estimated_launch = '2024-01-01' where project_id = ?  ";
+    public boolean updateYearEqual2024(String id) {
+        String sql = "UPDATE tblStartupProjects SET estimated_launch = '2022-01-01' where project_id = ?  ";
         try {
             Connection conn = DBUtils.getConnection();
             PreparedStatement ps = conn.prepareStatement(sql);

@@ -6,12 +6,12 @@
 package dao;
 
 import java.sql.Connection;
-import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
-import model.StartupProjectsDTO;
+import dto.StartupProjectsDTO;
+import java.sql.Date;
 import utils.DBUtils;
 
 /**
@@ -22,8 +22,8 @@ public class StartupProjectsDAO implements IDAO<StartupProjectsDTO, String> {
 
     @Override
     public boolean create(StartupProjectsDTO entity) {
-        String sql = "INSERT INTO tblBooks "
-                + " (project_id, project_name,Description,Status,estimated_launch) "
+        String sql = "INSERT INTO tblStartupProjects "
+                + " (project_id, project_name, Description, Status, estimated_launch) "
                 + " VALUES (?, ?, ?, ?, ?) ";
         try {
             Connection conn = DBUtils.getConnection();
@@ -72,35 +72,24 @@ public class StartupProjectsDAO implements IDAO<StartupProjectsDTO, String> {
         List<StartupProjectsDTO> list = new ArrayList<StartupProjectsDTO>();
 
         // 2. Kiem tra ket noi database
-        try (Connection conn = DBUtils.getConnection();
-                PreparedStatement ps = conn.prepareStatement(sql)) {
-
-            if (conn == null) {
-                System.out.println("Khong the ket noi Database!");
-                return list;
-            }
-            System.out.println("Ket noi database oke!");
-
-            // 3. thiet lap tham so truy van
+        try {
+            Connection conn = DBUtils.getConnection();
+            PreparedStatement ps = conn.prepareStatement(sql);
             ps.setString(1, "%" + searchTerm + "%");
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                StartupProjectsDTO s = new StartupProjectsDTO(
+                        rs.getInt("project_id"),
+                        rs.getString("project_name"),
+                        rs.getString("Description"),
+                        rs.getString("Status"),
+                        rs.getDate("estimated_launch"));
 
-            // 4. thuc thi truy van
-            try (ResultSet rs = ps.executeQuery()) {
-                while (rs.next()) {
-                    list.add(new StartupProjectsDTO(
-                            rs.getInt("project_id"),
-                            rs.getString("project_name"),
-                            rs.getString("Description"),
-                            rs.getString("Status"),
-                            rs.getDate("estimated_launch")));
-                }
+                list.add(s);
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            System.out.println(e.toString());
         }
-
-        // 5. Kiem tra so luong ket qua
-        //System.out.println("So luong ket qua tim thay: " + list.size());
         return list;
     }
 
@@ -110,35 +99,24 @@ public class StartupProjectsDAO implements IDAO<StartupProjectsDTO, String> {
         List<StartupProjectsDTO> list = new ArrayList<>();
 
         // 2. Kiem tra ket noi database
-        try (Connection conn = DBUtils.getConnection();
-                PreparedStatement ps = conn.prepareStatement(sql)) {
-
-            if (conn == null) {
-                System.out.println("Khong the ket noi Database!");
-                return list;
-            }
-            System.out.println("Ket noi database oke!");
-
-            // 3. thiet lap tham so truy van
+        try {
+            Connection conn = DBUtils.getConnection();
+            PreparedStatement ps = conn.prepareStatement(sql);
             ps.setString(1, "%" + searchTerm + "%");
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                StartupProjectsDTO s = new StartupProjectsDTO(
+                        rs.getInt("project_id"),
+                        rs.getString("project_name"),
+                        rs.getString("Description"),
+                        rs.getString("Status"),
+                        rs.getDate("estimated_launch"));
 
-            // 4. thuc thi truy van
-            try (ResultSet rs = ps.executeQuery()) {
-                while (rs.next()) {
-                    list.add(new StartupProjectsDTO(
-                            rs.getInt("project_id"),
-                            rs.getString("project_name"),
-                            rs.getString("Description"),
-                            rs.getString("Status"),
-                            rs.getDate("estimated_launch")));
-                }
+                list.add(s);
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            System.out.println(e.toString());
         }
-
-        // 5. Kiem tra so luong ket qua
-        //System.out.println("So luong ket qua tim thay: " + list.size());
         return list;
     }
 

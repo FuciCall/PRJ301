@@ -21,12 +21,12 @@
             <%
                 String error = request.getAttribute("error") + "";
             %>
-            <%=error.equals("null") ? "" : error%>
-            
+            <span style="color: red"><%=error.equals("null")?"":error%> <span/>
+
             <%
                 String mess = request.getAttribute("mess") + "";
             %>
-            <%=mess.equals("null") ? "" : mess%>
+           <span style="color: red"><%=mess.equals("null")?"":mess%> <span/>
         </form>
     </body>
 </html>
