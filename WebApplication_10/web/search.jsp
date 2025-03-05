@@ -187,7 +187,7 @@
                         <th>PublishYear</th>
                         <th>Price</th>
                         <th>Quantity</th>
-                        <% if (AuthUtils.isAdmin(session)) {
+                            <% if (AuthUtils.isAdmin(session)) {
                             %>
                         <th>Action</th>
                             <%}%>
@@ -203,7 +203,7 @@
                         <td><%=b.getPublishYear()%></td>
                         <td><%=b.getPrice()%></td>
                         <td><%=b.getQuantity()%></td>
-                        <% 
+                        <%
                             if (AuthUtils.isAdmin(session)) {
                         %>
                         <td><a href="MainController?action=delete&id=<%=b.getBookID()%>&searchTerm=<%=searchTerm%>">

@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package dao;
 
 import java.sql.Connection;
@@ -12,6 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 import dto.StartupProjectsDTO;
 import java.sql.Date;
+import java.sql.SQLException;
 import utils.DBUtils;
 
 /**
@@ -48,11 +44,48 @@ public class StartupProjectsDAO implements IDAO<StartupProjectsDTO, String> {
 
     @Override
     public StartupProjectsDTO readById(String id) {
-        return null;
+        StartupProjectsDTO project = null;
+        String query = "SELECT * FROM tblStartupProjects WHERE project_id = ?";
+
+        try (Connection connection = DBUtils.getConnection();
+                PreparedStatement statement = connection.prepareStatement(query)) {
+
+            statement.setString(1, id);
+            ResultSet result = statement.executeQuery();
+
+            if (result.next()) {
+                project = new StartupProjectsDTO(
+                        result.getInt("project_id"),
+                        result.getString("project_name"),
+                        result.getString("Description"),
+                        result.getString("Status"),
+                        result.getDate("estimated_launch")
+                );
+            }
+        } catch (Exception exception) {
+            System.out.println(exception.getMessage());
+        }
+
+        return project;
     }
 
     @Override
     public boolean update(StartupProjectsDTO entity) {
+        String sql = "UPDATE [dbo].[tblStartupProjects] "
+                + "SET Status = ? "
+                + "WHERE project_id = ?";
+        try {
+            Connection conn = DBUtils.getConnection();
+            PreparedStatement ps = conn.prepareStatement(sql);
+
+            ps.setString(1, entity.getStatus());
+            ps.setInt(2, entity.getProject_id());
+
+            int rowsUpdated = ps.executeUpdate();
+            return rowsUpdated > 0; // Trả về true nếu có dòng được cập nhật
+        } catch (Exception e) {
+            System.out.println("Error in update: " + e.toString());
+        }
         return false;
     }
 
@@ -134,5 +167,20 @@ public class StartupProjectsDAO implements IDAO<StartupProjectsDTO, String> {
         return false;
 
     }
+    
+    public int getNextProjectId() throws ClassNotFoundException {
+        String sql = "SELECT MAX(project_id) FROM tblStartupProjects";
+        try (Connection conn = DBUtils.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
+            if (rs.next()) {
+                return rs.getInt(1) + 1;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return 1;
+    }
+
 
 }

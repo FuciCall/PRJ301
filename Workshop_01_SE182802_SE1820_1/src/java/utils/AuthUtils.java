@@ -14,7 +14,7 @@ import javax.servlet.http.HttpSession;
  * @author as
  */
 public class AuthUtils {
-    public static final String ADMIN_ROLE = "AD";
+    public static final String ADMIN_ROLE = "Founder";
     public static final String USER_ROLE = "US";
     
     public static UserDTO getUser(String username) {

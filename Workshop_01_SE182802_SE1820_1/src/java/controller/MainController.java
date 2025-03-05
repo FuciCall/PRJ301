@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package controller;
 
 import dao.StartupProjectsDAO;
@@ -44,7 +39,6 @@ public class MainController extends HttpServlet {
             url = "search.jsp";
             UserDTO user = AuthUtils.getUser(strUserName);
             request.getSession().setAttribute("user", user);
-
             // search
             processSearch(request, response);
         } else {
@@ -66,14 +60,25 @@ public class MainController extends HttpServlet {
         return url;
     }
 
+    public void search(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        String searchTerm = request.getParameter("searchTerm");
+        if (searchTerm == null) {
+            searchTerm = "";
+        }
+        List<StartupProjectsDTO> sp = spDAO.searchByName2(searchTerm);
+        request.setAttribute("sp", sp);
+        request.setAttribute("searchTerm", searchTerm);
+    }
+
     public String processSearch(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        String url = "search.jsp"; // Đảm bảo luôn chuyển hướng đến search.jsp
+        String url = "search.jsp";
         HttpSession session = request.getSession();
         if (AuthUtils.isLoggedIn(session)) {
             String searchTerm = request.getParameter("searchTerm");
             if (searchTerm == null) {
-                searchTerm = ""; // Đảm bảo không bị null
+                searchTerm = "";
             }
             List<StartupProjectsDTO> sp = spDAO.searchByName2(searchTerm);
             request.setAttribute("sp", sp);
@@ -82,61 +87,82 @@ public class MainController extends HttpServlet {
         return url;
     }
 
-    public String processDelete(HttpServletRequest request, HttpServletResponse response)
+    public String processUpdate(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        String url = LOGIN_PAGE;
+        String url = "search.jsp";
         HttpSession session = request.getSession();
         if (AuthUtils.isFounders(session)) {
-            String id = request.getParameter("id");
-            spDAO.updateYearLessThan2025(id);
-            // search
-            processSearch(request, response);
-            url = "search.jsp";
+            try {
+                String project_id = request.getParameter("project_id");
+                String status = request.getParameter("Status");
+                /// check
+                System.out.println("DEBUG: project_id = " + project_id);
+                System.out.println("DEBUG: status = " + status);
+                ///
+                if (project_id != null && !project_id.trim().isEmpty() && status != null) {
+                    StartupProjectsDTO project = spDAO.readById(project_id);
+                    if (project != null) {
+                        project.setStatus(status);
+                        boolean updated = spDAO.update(project);
+                        if (updated) {
+                            request.setAttribute("message", "Project updated successfully!");
+                        } else {
+                            request.setAttribute("message", "Update failed!");
+                        }
+                    }
+                }
+                url = processSearch(request, response);
+            } catch (Exception e) {
+                log("Error at processUpdate: " + e.toString());
+            }
         }
         return url;
     }
 
     public String processAdd(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        String url = LOGIN_PAGE;
+        String url = "spForm.jsp";
         HttpSession session = request.getSession();
+
         if (AuthUtils.isFounders(session)) {
             try {
                 boolean checkError = false;
-                int project_id = Integer.parseInt(request.getParameter("txtProject_id"));
-                String project_name = request.getParameter("txtProject_name");
-                String description = request.getParameter("txtDescription");
-                String status = request.getParameter("txtStatus");
-                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-                Date estimated_launch = sdf.parse(request.getParameter("txtEstimatedLaunch"));
+                String project_name = request.getParameter("txtProject_name").trim();
+                String description = request.getParameter("txtDescription").trim();
+                String status = request.getParameter("txtStatus").trim();
+                String estimatedLaunchStr = request.getParameter("txtEstimatedLaunch").trim();
 
-                String pID = request.getParameter("txtProject_id");
-                project_id = 0;
-                if (pID != null && !pID.trim().isEmpty()) {
-                    project_id = Integer.parseInt(pID);
-                } else {
+                // Validate dữ liệu
+                if (!ProjectValidator.isValidName(project_name)) {
                     checkError = true;
-                    request.setAttribute("txtProject_id_error", "Project ID cannot be empty.");
+                    request.setAttribute("txtProject_name_error", "Invalid Project Name.");
+                }
+                if (!ProjectValidator.isValidDescription(description)) {
+                    checkError = true;
+                    request.setAttribute("txtDescription_error", "Invalid Description.");
+                }
+                if (!ProjectValidator.isValidStatus(status)) {
+                    checkError = true;
+                    request.setAttribute("txtStatus_error", "Invalid Status.");
+                }
+                if (!ProjectValidator.isValidDate(estimatedLaunchStr)) {
+                    checkError = true;
+                    request.setAttribute("txtEstimatedLaunch_error", "Invalid Launch Date.");
                 }
 
-                SimpleDateFormat yyyy = new SimpleDateFormat("yyyy");
-                int year = Integer.parseInt(yyyy.format(estimated_launch));
-                if (year < 2025) {
-                    checkError = true;
-                    request.setAttribute("txtEstimated_launch_error", "Year of estimated launch must be at least 2025.");
-                }
-
-                StartupProjectsDTO sp = new StartupProjectsDTO(project_id, project_name, description, status, estimated_launch);
-
+                // Nếu hợp lệ, thêm vào database
                 if (!checkError) {
-                    spDAO.create(sp);
-                    // search
+                    StartupProjectsDAO spDAO = new StartupProjectsDAO();
+                    int project_id = spDAO.getNextProjectId();
+                    Date estimatedLaunch = new SimpleDateFormat("yyyy-MM-dd").parse(estimatedLaunchStr);
+
+                    StartupProjectsDTO project = new StartupProjectsDTO(project_id, project_name, description, status, estimatedLaunch);
+                    spDAO.create(project);
+
                     url = processSearch(request, response);
-                } else {
-                    url = "StartupProjectsForm.jsp";
-                    request.setAttribute("sp", sp);
                 }
             } catch (Exception e) {
+                e.printStackTrace();
             }
         }
         return url;
@@ -158,8 +184,8 @@ public class MainController extends HttpServlet {
                     url = processLogout(request, response);
                 } else if (action.equals("search")) {
                     url = processSearch(request, response);
-                } else if (action.equals("delete")) {
-                    url = processDelete(request, response);
+                } else if (action.equals("update")) {
+                    url = processUpdate(request, response);
                 } else if (action.equals("add")) {
                     url = processAdd(request, response);
                 }
